@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 
 import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 import java.util.List;
 
 public class MainController {
@@ -25,9 +26,13 @@ public class MainController {
 	@FXML private DatePicker duePicker;
 	@FXML private TextField searchField;
 	@FXML private Label infoLabel;
+    @FXML private Button addButton;
+    @FXML private Button editButton;
+    @FXML private Button saveButton;
 
 	private final ObservableList<Task> tasks = FXCollections.observableArrayList();
 	private int nextId = 1;
+    private int editingId = -1;
 
 	private final TaskDao taskDao = new TaskDao();
 	private final CategoryDao categoryDao = new CategoryDao();
@@ -56,6 +61,20 @@ public class MainController {
 		// search support
 		searchField.textProperty().addListener((obs, oldV, newV) -> filterTasks(newV));
 		searchField.setOnKeyPressed(e -> { if (e.getCode() == KeyCode.ESCAPE) searchField.clear(); });
+
+		// Save button disabled until editing
+		saveButton.setDisable(true);
+
+		// double click row to edit
+		taskTable.setRowFactory(tv -> {
+			TableRow<Task> row = new TableRow<>();
+			row.setOnMouseClicked(event -> {
+				if (event.getClickCount() == 2 && (!row.isEmpty())) {
+					onEditTask();
+				}
+			});
+			return row;
+		});
 
 		infoLabel.setText("Zadania: " + tasks.size());
 	}
@@ -130,6 +149,51 @@ public class MainController {
 	}
 
 	@FXML
+	private void onEditTask() {
+		Task sel = taskTable.getSelectionModel().getSelectedItem();
+		if (sel == null) { infoLabel.setText("Zaznacz zadanie do edycji"); return; }
+		// load values into form
+		nameField.setText(sel.getName());
+		contentArea.setText(sel.getContent());
+		categoryCombo.setValue(sel.getCategoryName());
+		statusCombo.setValue(sel.getStatus());
+		if (sel.getDue() != null && !sel.getDue().isBlank()) {
+			duePicker.setValue(LocalDate.parse(sel.getDue()));
+		} else {
+			duePicker.setValue(null);
+		}
+		// set editing state
+		editingId = sel.getId();
+		addButton.setDisable(true);
+		saveButton.setDisable(false);
+		infoLabel.setText("Edycja zadania id=" + editingId);
+	}
+
+	@FXML
+	private void onSaveTask() {
+		if (editingId < 0) { infoLabel.setText("Brak zadania do zapisania"); return; }
+		String name = nameField.getText().trim();
+		if (name.isEmpty()) { infoLabel.setText("Podaj nazwę zadania"); return; }
+		String content = contentArea.getText().trim();
+		String category = categoryCombo.getValue() != null ? categoryCombo.getValue() : "Inne";
+		TaskStatus status = statusCombo.getValue() != null ? statusCombo.getValue() : TaskStatus.NOT_STARTED;
+		String due = (duePicker.getValue() != null) ? duePicker.getValue().format(DateTimeFormatter.ISO_LOCAL_DATE) : "";
+
+		Task updated = new Task(editingId, name, content, category, status, due);
+		// find and replace in list
+		for (int i = 0; i < tasks.size(); i++) {
+			if (tasks.get(i).getId() == editingId) { tasks.set(i, updated); break; }
+		}
+		taskDao.updateTask(updated);
+		// reset form/state
+		editingId = -1;
+		saveButton.setDisable(true);
+		addButton.setDisable(false);
+		clearForm();
+		infoLabel.setText("Zapisano zmiany");
+	}
+
+	@FXML
 	private void onClearForm() {
 		clearForm();
 	}
@@ -138,7 +202,11 @@ public class MainController {
 		nameField.clear();
 		contentArea.clear();
 		categoryCombo.getSelectionModel().clearSelection();
+		statusCombo.getSelectionModel().clearSelection();
 		duePicker.setValue(null);
+		// reset buttons
+		saveButton.setDisable(true);
+		addButton.setDisable(false);
 	}
 
 }

@@ -31,6 +31,12 @@
             <Button fx:id="clearButton" text="Wyczyść" onAction="#onClearForm" styleClass="secondary" />
           </children>
         </HBox>
+        <HBox spacing="8">
+          <children>
+            <Button fx:id="editButton" text="Edytuj" onAction="#onEditTask" />
+            <Button fx:id="saveButton" text="Zapisz" onAction="#onSaveTask" />
+          </children>
+        </HBox>
         <Separator />
         <Label text="Akcje" style="-fx-font-size: 13px; -fx-font-weight: 600;" />
         <Button fx:id="removeButton" text="Usuń wybrane" onAction="#onRemoveTask" maxWidth="Infinity" styleClass="secondary" />

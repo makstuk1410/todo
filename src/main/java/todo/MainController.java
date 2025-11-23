@@ -31,7 +31,6 @@ public class MainController {
     @FXML private Button saveButton;
 
 	private final ObservableList<Task> tasks = FXCollections.observableArrayList();
-	private int nextId = 1;
     private int editingId = -1;
 
 	private final TaskDao taskDao = new TaskDao();
@@ -43,10 +42,15 @@ public class MainController {
 		statusColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getStatus().toString()));
 		dueColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getDue()));
 
-		// load categories (fallback defaults)
+		// load categories (fallback defaults). If empty, insert initial categories into DB.
 		List<Category> cats = categoryDao.getAllCategories();
 		if (cats.isEmpty()) {
-			categoryCombo.getItems().addAll("Praca", "Prywatne", "Inne");
+			String[] initial = {"Baza Danych", "Front End", "Baton", "BackEnd"};
+			for (String nm : initial) {
+				// persist category and add to combo
+				categoryDao.createCategory(new Category(nm, ""));
+				categoryCombo.getItems().add(nm);
+			}
 		} else {
 			for (Category c : cats) categoryCombo.getItems().add(c.getName());
 		}
@@ -103,9 +107,11 @@ public class MainController {
 		TaskStatus status = statusCombo.getValue() != null ? statusCombo.getValue() : TaskStatus.NOT_STARTED;
 		String due = (duePicker.getValue() != null) ? duePicker.getValue().format(DateTimeFormatter.ISO_LOCAL_DATE) : "";
 
-		Task t = new Task(nextId++, name, content, category, status, due);
+		// create in DB first so we get generated id
+		Task tTemp = new Task(0, name, content, category, status, due);
+		int newId = taskDao.createTask(tTemp);
+		Task t = new Task(newId, name, content, category, status, due);
 		tasks.add(t);
-		taskDao.createTask(t);
 		clearForm();
 		infoLabel.setText("Zadanie dodane. Razem: " + tasks.size());
 	}
@@ -152,7 +158,6 @@ public class MainController {
 	private void onEditTask() {
 		Task sel = taskTable.getSelectionModel().getSelectedItem();
 		if (sel == null) { infoLabel.setText("Zaznacz zadanie do edycji"); return; }
-		// load values into form
 		nameField.setText(sel.getName());
 		contentArea.setText(sel.getContent());
 		categoryCombo.setValue(sel.getCategoryName());

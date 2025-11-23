@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="todo.MainController" prefWidth="1200" prefHeight="720" stylesheets="@style.css">
+
+  <top>
+    <HBox spacing="10" style="-fx-background-color: linear-gradient(to right, #4b6cb7, #182848); -fx-padding: 12;">
+      <children>
+        <Label text="Tasks TODO" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;" />
+        <Region HBox.hgrow="ALWAYS" />
+        <TextField fx:id="searchField" promptText="Szukaj..." />
+      </children>
+    </HBox>
+  </top>
+
+  <left>
+    <VBox spacing="10" BorderPane.alignment="CENTER" style="-fx-padding: 18; -fx-pref-width: 340; -fx-background-radius: 8;">
+      <children>
+        <Label text="Nowe zadanie" style="-fx-font-size: 14px; -fx-font-weight: 600;" />
+        <TextField fx:id="nameField" promptText="Nazwa zadania" />
+        <TextArea fx:id="contentArea" promptText="Opis (opcjonalnie)" prefRowCount="4" />
+        <ComboBox fx:id="categoryCombo" promptText="Kategoria" />
+        <ComboBox fx:id="statusCombo" promptText="Status" />
+        <DatePicker fx:id="duePicker" promptText="Termin" />
+        <HBox spacing="8">
+          <children>
+            <Button fx:id="addButton" text="Dodaj" onAction="#onAddTask" />
+            <Button fx:id="clearButton" text="Wyczyść" onAction="#onClearForm" styleClass="secondary" />
+          </children>
+        </HBox>
+        <Separator />
+        <Label text="Akcje" style="-fx-font-size: 13px; -fx-font-weight: 600;" />
+        <Button fx:id="removeButton" text="Usuń wybrane" onAction="#onRemoveTask" maxWidth="Infinity" styleClass="secondary" />
+        <Button fx:id="markDoneButton" text="Oznacz jako zakończone" onAction="#onMarkDone" maxWidth="Infinity" />
+        <Button fx:id="changeStatusButton" text="Zmień status" onAction="#onChangeStatus" maxWidth="Infinity" />
+      </children>
+    </VBox>
+  </left>
+
+  <center>
+    <VBox spacing="8" style="-fx-padding: 12;">
+      <children>
+        <TableView fx:id="taskTable" VBox.vgrow="ALWAYS">
+          <columns>
+            <TableColumn fx:id="nameColumn" text="Nazwa" prefWidth="300" />
+            <TableColumn fx:id="categoryColumn" text="Kategoria" prefWidth="150" />
+            <TableColumn fx:id="statusColumn" text="Status" prefWidth="120" />
+            <TableColumn fx:id="dueColumn" text="Termin" prefWidth="120" />
+          </columns>
+        </TableView>
+        <HBox spacing="10">
+          <children>
+            <Label fx:id="infoLabel" text="" />
+            <Region HBox.hgrow="ALWAYS" />
+          </children>
+        </HBox>
+      </children>
+    </VBox>
+  </center>
+
+  <bottom>
+    <HBox alignment="CENTER_RIGHT" style="-fx-padding: 8;">
+      <children>
+        <Label text="© TODO App" />
+      </children>
+    </HBox>
+  </bottom>
+
+</BorderPane>

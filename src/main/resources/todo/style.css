@@ -1,0 +1,137 @@
+/* Modern styling for TODO app */
+root {
+    -fx-font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    -fx-font-size: 13px;
+}
+
+/* Table styling */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-effect: dropshadow(gaussian, rgba(25,25,25,0.06), 10, 0, 0, 2);
+}
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f3f6fb);
+    -fx-border-color: transparent;
+}
+.table-view .table-column {
+    -fx-alignment: CENTER-LEFT;
+}
+.table-view .table-row-cell {
+    -fx-background-color: transparent;
+}
+.table-view .table-row-cell:odd {
+    -fx-background-color: transparent;
+}
+.table-view .table-row-cell:even {
+    -fx-background-color: rgba(240,245,250,0.7);
+}
+.table-row-cell:hover {
+    -fx-background-color: rgba(70,130,180,0.08);
+}
+.table-row-cell:selected {
+    -fx-background-color: linear-gradient(to right, #5aa0ff, #2f7be6);
+    -fx-text-fill: white;
+}
+.table-view .text {
+    -fx-fill: #222;
+}
+
+/* Buttons */
+.button {
+    -fx-background-color: linear-gradient(#4a90e2, #3a78d0);
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-padding: 6 12 6 12;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+.button:hover {
+    -fx-background-color: linear-gradient(#5aa0ff, #3f88e8);
+}
+.button:focused {
+    -fx-effect: dropshadow(gaussian, rgba(60,120,220,0.35), 8, 0, 0, 2);
+}
+.button.secondary {
+    -fx-background-color: transparent;
+    -fx-border-color: #d6e6fb;
+    -fx-text-fill: #2b6fb3;
+}
+
+/* Header label */
+Label {
+    -fx-font-size: 13px;
+}
+
+/* Left form */
+VBox {
+    -fx-background-color: #fbfdff;
+    -fx-border-color: transparent;
+}
+
+/* Inputs */
+TextField, TextArea, ComboBox, DatePicker {
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-background-color: white;
+    -fx-border-color: #e3eefc;
+    -fx-padding: 8 10 8 10;
+}
+TextArea {
+    -fx-padding: 8;
+}
+ComboBox .list-cell {
+    -fx-padding: 6 10 6 10;
+}
+
+/* Header / top bar */
+.border-pane > .top {
+    -fx-background-color: linear-gradient(to right, #0f172a, #1e293b);
+}
+.top Label {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+}
+
+/* Info label */
+#infoLabel {
+    -fx-text-fill: #4a5568;
+    -fx-font-size: 12px;
+}
+
+/* Footer */
+.border-pane > .bottom {
+    -fx-background-color: transparent;
+    -fx-padding: 10 16 10 16;
+}
+
+/* Make form area look like a card */
+left VBox {
+    -fx-background-color: linear-gradient(to bottom right, rgba(255,255,255,0.98), rgba(245,250,255,0.98));
+    -fx-effect: dropshadow(gaussian, rgba(16,24,40,0.06), 14, 0, 0, 6);
+}
+
+/* Table header styling */
+.table-view .column-header-background .label {
+    -fx-text-fill: #334155;
+    -fx-font-weight: 600;
+}
+
+/* small tweaks for controls */
+.text-field:focused, .combo-box:focused, .date-picker:focused {
+    -fx-border-color: #7fb3ff;
+    -fx-effect: dropshadow(gaussian, rgba(79,143,255,0.14), 6, 0, 0, 3);
+}
+
+/* Secondary button class */
+.button.secondary {
+    -fx-background-color: transparent;
+    -fx-border-color: #cfe4ff;
+    -fx-text-fill: #1160b8;
+    -fx-font-weight: 600;
+}
+
+/* Wider table center spacing */
+.center {
+    -fx-padding: 18;
+}

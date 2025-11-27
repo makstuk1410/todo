@@ -28,6 +28,7 @@ public enum TaskStatus {
     }
 
     public static TaskStatus fromCode(String code) {
+        if (code == null) return NOT_STARTED;
         for (TaskStatus s : values()) if (s.code.equals(code)) return s;
         return NOT_STARTED;
     }

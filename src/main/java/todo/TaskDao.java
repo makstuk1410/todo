@@ -19,6 +19,13 @@ public class TaskDao {
         }
     }
 
+    /**
+     * Constructor for tests: inject a custom Db instance (e.g. using a temp file).
+     */
+    public TaskDao(Db db) {
+        this.db = db;
+    }
+
     public List<Task> getAllTasks() {
         try {
             return db.getTasks();

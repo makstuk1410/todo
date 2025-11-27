@@ -1,6 +1,10 @@
-todo\CategoryDao.class
+todo\DbInspector.class
 todo\MainController.class
-todo\Category.class
-todo\Main.class
 todo\TaskDao.class
 todo\Task.class
+todo\TaskStatus.class
+todo\CategoryDao.class
+todo\Category.class
+todo\Main.class
+todo\DbInserter.class
+todo\Db.class

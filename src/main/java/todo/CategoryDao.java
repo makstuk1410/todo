@@ -15,6 +15,13 @@ public class CategoryDao {
 		}
 	}
 
+	/**
+	 * Constructor for tests: inject a custom Db instance (e.g. using a temp file).
+	 */
+	public CategoryDao(Db db) {
+		this.db = db;
+	}
+
 	public List<Category> getAllCategories() {
 		try {
 			return db.getCategories();

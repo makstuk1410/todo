@@ -52,6 +52,30 @@ public class CategoryTest {
     }
 
     @Test
+    @DisplayName("Factory rejects when both arguments are non-String")
+    public void factoryBothNonString() {
+        assertThrows(todo.exceptions.InvalidCategoryTypeException.class, () -> Category.of(1, 2));
+    }
+
+    @Test
+    @DisplayName("Factory rejects null arguments (name, description, or both)")
+    public void factoryNullArguments() {
+        assertThrows(todo.exceptions.InvalidCategoryTypeException.class, () -> Category.of(null, "desc"));
+        assertThrows(todo.exceptions.InvalidCategoryTypeException.class, () -> Category.of("name", null));
+        assertThrows(todo.exceptions.InvalidCategoryTypeException.class, () -> Category.of(null, null));
+    }
+
+    @Test
+    @DisplayName("Factory accepts two Strings")
+    public void factoryValidPath() {
+        assertDoesNotThrow(() -> {
+            Category c = Category.of("Personal", "My tasks");
+            assertEquals("Personal", c.getName());
+            assertEquals("My tasks", c.getDescription());
+        });
+    }
+
+    @Test
     @DisplayName("Whitespace and tricky string variants")
     public void whitespaceAndTrickyVariants() {
         // Strings composed only of whitespace should be rejected
@@ -75,5 +99,21 @@ public class CategoryTest {
 
         // Strings containing control characters along with other chars are accepted
         assertDoesNotThrow(() -> new Category("name\nmore", "desc"));
+    }
+
+    @Test
+    @DisplayName("Constructor: one empty/blank and the other valid (4 variants)")
+    public void constructorOneBlankOtherValid() {
+        // name empty, description valid
+        assertThrows(todo.exceptions.EmptyCategoryException.class, () -> new Category("", "Desc"));
+
+        // name blank, description valid
+        assertThrows(todo.exceptions.EmptyCategoryException.class, () -> new Category("  ", "Desc"));
+
+        // name valid, description empty
+        assertThrows(todo.exceptions.EmptyCategoryException.class, () -> new Category("Name", ""));
+
+        // name valid, description blank
+        assertThrows(todo.exceptions.EmptyCategoryException.class, () -> new Category("Name", "\t"));
     }
 }

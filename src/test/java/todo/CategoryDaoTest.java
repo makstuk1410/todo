@@ -138,4 +138,73 @@ public class CategoryDaoTest {
         assertNotNull(rex.getCause());
         assertTrue(rex.getCause().getMessage().toLowerCase().contains("locked"));
     }
+
+    @Test
+    @DisplayName("CategoryDao() when Db() constructor throws SQLException")
+    public void defaultConstructorDbThrows() throws Exception {
+        String originalHome = System.getProperty("user.home");
+        Path badHome = Files.createTempFile("badhome-cat-", ".tmp");
+        try {
+            System.setProperty("user.home", badHome.toAbsolutePath().toString());
+            RuntimeException ex = assertThrows(RuntimeException.class, () -> new CategoryDao());
+            assertNotNull(ex.getCause());
+            assertTrue(ex.getCause() instanceof java.sql.SQLException);
+        } finally {
+            System.setProperty("user.home", originalHome);
+            try { Files.deleteIfExists(badHome); } catch (Exception ignored) {}
+        }
+    }
+
+    @Test
+    @DisplayName("CategoryDao(Db) with null db: first use throws NPE")
+    public void categoryDaoNullDbFirstUse() {
+        CategoryDao cd = new CategoryDao(null);
+        assertThrows(NullPointerException.class, () -> cd.getAllCategories());
+    }
+
+    @Test
+    @DisplayName("createCategory with null argument")
+    public void createCategoryNull() {
+        assertThrows(NullPointerException.class, () -> dao.createCategory(null));
+    }
+
+    @Test
+    @DisplayName("createCategory with incomplete data (null or empty name)")
+    public void createCategoryIncomplete() {
+        // null name -> Category constructor throws NullCategoryException
+        assertThrows(todo.exceptions.NullCategoryException.class, () -> dao.createCategory(new Category(null, "d")));
+
+        // empty name -> EmptyCategoryException
+        assertThrows(todo.exceptions.EmptyCategoryException.class, () -> dao.createCategory(new Category("", "d")));
+    }
+
+    @Test
+    @DisplayName("deleteCategory null/empty/unknown")
+    public void deleteCategoryEdgeCases() {
+        dao.createCategory(new Category("Exist", "x"));
+        assertEquals(1, dao.getAllCategories().size());
+
+        // delete null should not remove existing
+        assertDoesNotThrow(() -> dao.deleteCategory(null));
+        assertEquals(1, dao.getAllCategories().size());
+
+        // delete empty string should not remove existing
+        assertDoesNotThrow(() -> dao.deleteCategory(""));
+        assertEquals(1, dao.getAllCategories().size());
+
+        // delete unknown name should not remove existing
+        assertDoesNotThrow(() -> dao.deleteCategory("unknown"));
+        assertEquals(1, dao.getAllCategories().size());
+    }
+
+    @Test
+    @DisplayName("updateCategory null or invalid data")
+    public void updateCategoryNullAndInvalid() {
+        // null category to update -> NPE
+        assertThrows(NullPointerException.class, () -> dao.updateCategory(null));
+
+        // invalid categories should be rejected at construction
+        assertThrows(todo.exceptions.NullCategoryException.class, () -> dao.updateCategory(new Category(null, "d")));
+        assertThrows(todo.exceptions.EmptyCategoryException.class, () -> dao.updateCategory(new Category("", "d")));
+    }
 }

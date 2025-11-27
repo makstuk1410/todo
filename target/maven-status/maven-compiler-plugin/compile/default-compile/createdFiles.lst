@@ -1,9 +1,13 @@
+todo\exceptions\CategoryValidationException.class
 todo\DbInspector.class
 todo\MainController.class
+todo\exceptions\NullCategoryException.class
+todo\exceptions\EmptyCategoryException.class
 todo\TaskDao.class
 todo\Task.class
 todo\TaskStatus.class
 todo\CategoryDao.class
+todo\exceptions\InvalidCategoryTypeException.class
 todo\Category.class
 todo\Main.class
 todo\DbInserter.class

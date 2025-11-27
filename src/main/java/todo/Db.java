@@ -40,6 +40,8 @@ public class Db {
             while (res.next()) {
                 String name = res.getString("name");
                 String description = res.getString("description");
+                if (description == null || description.isBlank()) description = "-";
+                if (name == null || name.isBlank()) name = "-";
                 categories.add(new Category(name, description));
             }
             return categories;
@@ -58,6 +60,8 @@ public class Db {
                     while (results.next()) {
                         String name = results.getString("name");
                         String description = results.getString("description");
+                        if (description == null || description.isBlank()) description = "-";
+                        if (name == null || name.isBlank()) name = "-";
                         return new Category(name, description);
                     }
                     return null;
